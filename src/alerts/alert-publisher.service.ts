@@ -3,7 +3,7 @@ import { EventEmitter2 } from "@nestjs/event-emitter";
 import {
   ALERT_PRICE_EVENT,
   ALERT_RISK_EVENT,
-  AlertEventPayload,
+  type AlertEventPayload,
 } from "./events/alert-events";
 
 @Injectable()

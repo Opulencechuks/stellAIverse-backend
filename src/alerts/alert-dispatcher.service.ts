@@ -6,7 +6,7 @@ import { AlertPreference } from "./entities/alert-preference.entity";
 import { AlertDeliveryLog } from "./entities/alert-delivery-log.entity";
 import { AlertType } from "./entities/alert.entity";
 import { AlertChannel, AlertDeliveryStatus } from "./entities/alert.enums";
-import { AlertEventPayload } from "./events/alert-events";
+import type { AlertEventPayload } from "./events/alert-events";
 
 @Injectable()
 export class AlertDispatcherService {

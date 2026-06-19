@@ -1,4 +1,4 @@
-import { Module, OnModuleInit } from "@nestjs/common";
+import { Module, OnModuleInit, NestModule, MiddlewareConsumer } from "@nestjs/common";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { APP_GUARD } from "@nestjs/core";
@@ -19,7 +19,6 @@ import { PortfolioModule } from "./portfolio/portfolio.module";
 import { RiskManagementModule } from "./risk-management/risk-management.module";
 import { DeFiModule } from "./defi/defi.module";
 import { AlertsModule } from "./alerts/alerts.module";
-import { EventEmitterModule } from "@nestjs/event-emitter";
 
 // Auth entities
 import { User } from "./user/entities/user.entity";
@@ -53,6 +52,10 @@ import { ThrottlerUserIpGuard } from "./common/guard/throttler.guard";
 import { RolesGuard } from "./common/guard/roles.guard";
 import { KycGuard } from "./common/guard/kyc.guard";
 import { SubmissionVerifierService } from "./oracle/submission-verifier.service";
+
+// Logger Config & Middleware
+import { PinoLogger } from "./config/nest-pino-logger";
+import { PinoRequestLoggerMiddleware } from "./common/middleware/pino-request-logger.middleware";
 
 @Module({
   imports: [
@@ -137,6 +140,7 @@ import { SubmissionVerifierService } from "./oracle/submission-verifier.service"
 
   providers: [
     AppService,
+    PinoLogger,
     {
       provide: APP_GUARD,
       useClass: ThrottlerUserIpGuard,
@@ -151,10 +155,17 @@ import { SubmissionVerifierService } from "./oracle/submission-verifier.service"
     },
   ],
 })
-export class AppModule implements OnModuleInit {
+export class AppModule implements OnModuleInit, NestModule {
   constructor(private readonly verifier: SubmissionVerifierService) {}
 
   onModuleInit() {
     this.verifier.start();
   }
+
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(PinoRequestLoggerMiddleware)
+      .forRoutes("*");
+  }
 }
+

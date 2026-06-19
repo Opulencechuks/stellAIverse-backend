@@ -116,7 +116,7 @@ export class SubmissionVerifierService {
   // -------------------------------------
   private async triggerAlerts(result: any) {
     // 👉 Replace with real integrations
-    console.warn("ALERT: Submission mismatch detected", result);
+    this.logger.warn({ result }, "ALERT: Submission mismatch detected");
 
     // Example webhook
     // await axios.post(WEBHOOK_URL, result);
