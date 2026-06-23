@@ -10,6 +10,7 @@ import { OptimizationHistory } from "./entities/optimization-history.entity";
 import { RebalancingEvent } from "./entities/rebalancing-event.entity";
 import { PerformanceMetric } from "./entities/performance-metric.entity";
 import { BacktestResult } from "./entities/backtest-result.entity";
+import { PortfolioTransaction } from "./entities/portfolio-transaction.entity";
 
 // Services
 import { PortfolioService } from "./services/portfolio.service";

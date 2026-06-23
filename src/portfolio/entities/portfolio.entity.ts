@@ -4,6 +4,7 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
+  DeleteDateColumn,
   Index,
   ManyToOne,
   OneToMany,
@@ -11,6 +12,7 @@ import {
 } from "typeorm";
 import { User } from "../../user/entities/user.entity";
 import { PortfolioAsset } from "./portfolio-asset.entity";
+import { PortfolioTransaction } from "./portfolio-transaction.entity";
 import { OptimizationHistory } from "./optimization-history.entity";
 import { RebalancingEvent } from "./rebalancing-event.entity";
 import { PerformanceMetric } from "./performance-metric.entity";
@@ -72,6 +74,9 @@ export class Portfolio {
   @UpdateDateColumn()
   updatedAt: Date;
 
+  @DeleteDateColumn()
+  deletedAt?: Date;
+
   @Column({ nullable: true })
   lastRebalanceDate: Date;
 
@@ -87,6 +92,9 @@ export class Portfolio {
     cascade: true,
   })
   assets: PortfolioAsset[];
+
+  @OneToMany(() => PortfolioTransaction, (tx) => tx.portfolio, { cascade: true })
+  transactions: PortfolioTransaction[];
 
   @OneToMany(() => OptimizationHistory, (history) => history.portfolio, {
     cascade: true,

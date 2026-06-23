@@ -4,6 +4,7 @@ import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import { AppModule } from "./app.module";
 import * as helmet from "helmet";
 import { logger } from "./config/logger";
+import { PinoLogger } from "./config/nest-pino-logger";
 import { GlobalExceptionFilter } from "./common/filters/global-exception.filter";
 import { SanitizePipe } from "./common/pipes/sanitize.pipe";
 
@@ -19,11 +20,12 @@ async function bootstrap() {
 
   // Create app with appropriate logging
   const app = await NestFactory.create(AppModule, {
-    logger:
-      process.env.NODE_ENV === "production"
-        ? ["error", "warn"]
-        : ["log", "error", "warn", "debug", "verbose"],
+    bufferLogs: true,
   });
+  
+  // Set the custom PinoLogger globally
+  app.useLogger(app.get(PinoLogger));
+
 
   // Security Headers - Helmet
   app.use(

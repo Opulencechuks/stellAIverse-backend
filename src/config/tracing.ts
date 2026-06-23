@@ -29,12 +29,14 @@ export const sdk = new NodeSDK({
 });
 
 // Start the SDK
+import { logger } from "./logger";
+
 export const startTracing = async () => {
   try {
     sdk.start();
-    console.log("OpenTelemetry tracing initialized");
+    logger.info("OpenTelemetry tracing initialized");
   } catch (err) {
-    console.error("Failed to start OpenTelemetry SDK:", err);
+    logger.error({ err }, "Failed to start OpenTelemetry SDK");
   }
 };
 
@@ -42,9 +44,9 @@ export const startTracing = async () => {
 export const shutdownTracing = async () => {
   try {
     await sdk.shutdown();
-    console.log("OpenTelemetry tracing shut down");
+    logger.info("OpenTelemetry tracing shut down");
   } catch (error) {
-    console.error("Error shutting down tracing:", error);
+    logger.error({ error }, "Error shutting down tracing");
   }
 };
 
